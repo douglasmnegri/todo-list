@@ -1,12 +1,5 @@
 import _ from "lodash";
 import "./style.css";
+import initializeForm from "./scripts/app.js";
 
-function component() {
-  const element = document.createElement("div");
-  element.innerHTML = _.join(["Projects", "Test"], " ");
-  element.classList.add("hello");
-
-  return element;
-}
-
-document.body.appendChild(component());
+initializeForm();

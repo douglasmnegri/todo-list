@@ -1,3 +1,222 @@
-.hello {
-    color: red;
-  }
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+:root {
+  --primary-color: #4caf50;
+  --secondary-color: #ffc107;
+  --accent-color: #2196f3;
+  --font-family: "Roboto", sans-serif;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-family);
+}
+
+h2 {
+  font-size: larger;
+  font-weight: bolder;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 8fr;
+  grid-template-rows: 1fr 10fr;
+}
+
+.header {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  border: solid black 2px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+  padding: 1em;
+  background-color: var(--primary-color);
+}
+
+.side-tab {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  border: solid black 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  padding: 1em;
+  height: 100vh;
+  background-color: var(--secondary-color);
+}
+
+li {
+  padding-left: 1em;
+  list-style-type: none;
+}
+
+.content {
+  grid-column: 2 / 2;
+  grid-row: 2 / 3;
+  border: solid black 2px;
+}
+
+.content {
+  border: solid black 10px;
+  display: flex;
+  justify-content: baseline;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5em;
+}
+
+.inbox {
+  font-size: 2em;
+  font-weight: bolder;
+}
+.new-task {
+  display: flex;
+  gap: 0.5em;
+}
+
+.add-task {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #4caf50;
+  color: white;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.add-task:hover {
+  background-color: #388e3c;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.taskContainer {
+  width: 600px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 1em;
+}
+
+input {
+  margin-bottom: 20px;
+}
+
+input label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.task-button-add {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #388e3c; /* Darker shade of primary color */
+}
