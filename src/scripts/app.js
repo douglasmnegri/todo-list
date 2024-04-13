@@ -1,5 +1,15 @@
 import { create } from "lodash";
 
+const allTasks = [];
+
+class Tasks {
+  constructor(name, description, date) {
+    this.name = name;
+    this.description = description;
+    this.date = date;
+  }
+}
+
 const content = document.querySelector(".content");
 const addButton = document.querySelector(".add-task");
 
@@ -31,8 +41,8 @@ function initializeForm() {
     taskDateLabel.textContent = "Due date: ";
 
     const addTaskButton = document.createElement("button");
-    addTaskButton.textContent = "Add task"
-    addTaskButton.className = "task-button-add"
+    addTaskButton.textContent = "Add task";
+    addTaskButton.className = "task-button-add";
 
     form.appendChild(taskNameLabel);
     form.appendChild(taskNameInput);
@@ -44,7 +54,47 @@ function initializeForm() {
 
     taskDiv.appendChild(form);
     content.appendChild(taskDiv);
+
+    addTaskButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      printTask();
+    });
   });
+}
+
+function printTask() {
+  const taskName = document.querySelector(".task-name").value;
+  const taskDescription = document.querySelector(".task-description").value;
+  const taskDate = document.querySelector(".task-date").value;
+
+  const newTask = new Tasks(taskName, taskDescription, taskDate);
+  allTasks.push(newTask);
+
+
+  const newDiv = document.createElement("div");
+
+  const taskNamePrint = document.createElement("div");
+  taskNamePrint.textContent = taskName;
+
+  const taskDescriptionPrint = document.createElement("div");
+  taskDescriptionPrint.textContent = taskDescription;
+
+  const taskDatePrint = document.createElement("div");
+  taskDatePrint.textContent = taskDate;
+
+  newDiv.appendChild(taskNamePrint);
+  newDiv.appendChild(taskDescriptionPrint);
+  newDiv.appendChild(taskDatePrint);
+
+  content.append(newDiv);
+
+  removeForm();
+
+}
+
+function removeForm() {
+  const taskContainer = document.querySelector('.taskContainer');
+  taskContainer.remove();
 }
 
 export default initializeForm;
