@@ -93,6 +93,7 @@ video {
   --primary-color: #4caf50;
   --secondary-color: #ffc107;
   --accent-color: #2196f3;
+  --red-tone-color: #f44336;
   --font-family: "Roboto", sans-serif;
 }
 
@@ -177,6 +178,11 @@ li {
   cursor: pointer;
 }
 
+.new-task-container {
+  display: flex;
+  gap: 0.3em;
+}
+
 .add-task:hover {
   background-color: #388e3c;
 }
@@ -187,13 +193,14 @@ form {
   flex-wrap: wrap;
 }
 
-.taskContainer {
-  width: 600px;
+.taskContainer,
+.container-current-tasks {
+  width: 250px;
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 1em;
+  margin-top: 1.5em;
 }
 
 input {
@@ -215,8 +222,36 @@ input label {
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
+  margin-right: 0.5em;
+}
+
+
+.task-button-cancel {
+  background-color: var(--red-tone-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
 .button:hover {
   background-color: #388e3c; /* Darker shade of primary color */
+}
+
+.hamburger {
+  width: 25px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.hamburger .bar {
+  width: 100%;
+  height: 4px;
+  background-color: black;
+  border-radius: 2px;
 }

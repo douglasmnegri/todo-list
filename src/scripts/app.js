@@ -11,6 +11,7 @@ class Tasks {
 }
 
 const content = document.querySelector(".content");
+const addTaskBox = document.querySelector(".add-task-box");
 const addButton = document.querySelector(".add-task");
 
 function initializeForm() {
@@ -40,9 +41,16 @@ function initializeForm() {
     const taskDateLabel = document.createElement("label");
     taskDateLabel.textContent = "Due date: ";
 
+    const taskButtonDiv = document.createElement("div");
+    taskButtonDiv.className = "task-button-div";
+
     const addTaskButton = document.createElement("button");
     addTaskButton.textContent = "Add task";
     addTaskButton.className = "task-button-add";
+
+    const cancelTaskButton = document.createElement("button");
+    cancelTaskButton.textContent = "Cancel";
+    cancelTaskButton.className = "task-button-cancel";
 
     form.appendChild(taskNameLabel);
     form.appendChild(taskNameInput);
@@ -50,14 +58,25 @@ function initializeForm() {
     form.appendChild(taskDescriptionInput);
     form.appendChild(taskDateLabel);
     form.appendChild(taskDateInput);
-    form.appendChild(addTaskButton);
+    taskButtonDiv.appendChild(addTaskButton);
+    taskButtonDiv.appendChild(cancelTaskButton);
+    form.appendChild(taskButtonDiv);
 
     taskDiv.appendChild(form);
-    content.appendChild(taskDiv);
+    addTaskBox.appendChild(taskDiv);
+
+    addButton.disabled = true;
 
     addTaskButton.addEventListener("click", (e) => {
       e.preventDefault();
       printTask();
+      addButton.disabled = false;
+    });
+
+    cancelTaskButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      removeForm();
+      addButton.disabled = false;
     });
   });
 }
@@ -70,8 +89,8 @@ function printTask() {
   const newTask = new Tasks(taskName, taskDescription, taskDate);
   allTasks.push(newTask);
 
-
-  const newDiv = document.createElement("div");
+  const containerCurrentTasks = document.createElement("div");
+  containerCurrentTasks.className = "container-current-tasks";
 
   const taskNamePrint = document.createElement("div");
   taskNamePrint.textContent = taskName;
@@ -82,18 +101,16 @@ function printTask() {
   const taskDatePrint = document.createElement("div");
   taskDatePrint.textContent = taskDate;
 
-  newDiv.appendChild(taskNamePrint);
-  newDiv.appendChild(taskDescriptionPrint);
-  newDiv.appendChild(taskDatePrint);
-
-  content.append(newDiv);
+  containerCurrentTasks.appendChild(taskNamePrint);
+  containerCurrentTasks.appendChild(taskDescriptionPrint);
+  containerCurrentTasks.appendChild(taskDatePrint);
+  content.append(containerCurrentTasks);
 
   removeForm();
-
 }
 
 function removeForm() {
-  const taskContainer = document.querySelector('.taskContainer');
+  const taskContainer = document.querySelector(".taskContainer");
   taskContainer.remove();
 }
 
