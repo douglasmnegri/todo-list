@@ -97,9 +97,10 @@ video {
   --font-family: "Roboto", sans-serif;
 }
 
-body {
-  height: 100%;
+body,
+html {
   margin: 0;
+  padding: 0;
   font-family: var(--font-family);
 }
 
@@ -111,7 +112,7 @@ h2 {
 .container {
   display: grid;
   grid-template-columns: 1fr 8fr;
-  grid-template-rows: 1fr 10fr;
+  grid-template-rows: 1fr 18fr;
 }
 
 .header {
@@ -120,8 +121,8 @@ h2 {
   border: solid black 2px;
   display: flex;
   justify-content: flex-start;
+  gap: 2em;
   align-items: center;
-  gap: 1em;
   padding: 1em;
   background-color: var(--primary-color);
 }
@@ -129,13 +130,21 @@ h2 {
 .side-tab {
   grid-column: 1 / 2;
   grid-row: 2 / 3;
-  border: solid black 2px;
   display: flex;
   flex-direction: column;
   gap: 1.5em;
   padding: 1em;
-  height: 100vh;
   background-color: var(--secondary-color);
+  height: calc(100vh - 20px);
+  border-left: solid black 2px;
+  border-right: solid black 2px;
+  transition: transform 0.5s ease;
+  transform: translateX(-100%);
+}
+
+.side-tab.active {
+  display: block;
+  transform: translateX(0);
 }
 
 li {
@@ -146,11 +155,9 @@ li {
 .content {
   grid-column: 2 / 2;
   grid-row: 2 / 3;
-  border: solid black 2px;
 }
 
 .content {
-  border: solid black 10px;
   display: flex;
   justify-content: baseline;
   flex-direction: column;
@@ -224,7 +231,6 @@ input label {
   transition: background-color 0.3s ease;
   margin-right: 0.5em;
 }
-
 
 .task-button-cancel {
   background-color: var(--red-tone-color);
