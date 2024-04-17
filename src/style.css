@@ -139,12 +139,12 @@ h2 {
   border-left: solid black 2px;
   border-right: solid black 2px;
   transition: transform 0.5s ease;
-  transform: translateX(-100%);
+  transform: translateX(0);
 }
 
 .side-tab.active {
   display: block;
-  transform: translateX(0);
+  transform: translateX(-100%);
 }
 
 li {
@@ -200,14 +200,41 @@ form {
   flex-wrap: wrap;
 }
 
+.taskContainer {
+  width: 250px;
+}
+
 .taskContainer,
 .container-current-tasks {
-  width: 250px;
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-top: 1.5em;
+}
+
+.container-current-tasks {
+  display: grid;
+  grid-template-columns: min-content auto auto;
+  width: 60em;
+  gap: 10px; 
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+  width: 15px; 
+  height: 15px; 
+  border: 2px solid var(--primary-color); 
+  background-color: transparent; 
+  cursor: pointer;
+}
+
+input[type="checkbox"]:hover {
+  transition: background-color 0.4s ease;
+  background-color: var(--primary-color);
 }
 
 input {

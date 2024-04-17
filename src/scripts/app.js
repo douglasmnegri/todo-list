@@ -1,14 +1,18 @@
 import { create } from "lodash";
+import { format, compareAsc } from "date-fns";
 
-const allTasks = [];
-
-class Tasks {
-  constructor(name, description, date) {
-    this.name = name;
-    this.description = description;
-    this.date = date;
-  }
-}
+const allTasks = [
+  {
+    name: "Super Market",
+    description: "Buy eggs, milk and bread.",
+    date: "2024-04-29",
+  },
+  {
+    name: "Read Book",
+    description: "Start to read the new novel from Stephen King",
+    date: "2024-05-01",
+  },
+];
 
 const content = document.querySelector(".content");
 const addTaskBox = document.querySelector(".add-task-box");
@@ -69,7 +73,8 @@ function initializeForm() {
 
     addTaskButton.addEventListener("click", (e) => {
       e.preventDefault();
-      printTask();
+      addNewTask();
+      printTask(allTasks);
       addButton.disabled = false;
     });
 
@@ -81,30 +86,41 @@ function initializeForm() {
   });
 }
 
-function printTask() {
-  const taskName = document.querySelector(".task-name").value;
-  const taskDescription = document.querySelector(".task-description").value;
-  const taskDate = document.querySelector(".task-date").value;
+function printTask(tasks) {
+  for (let i = 0; i < tasks.length; i++) {
+    const task = tasks[i];
 
-  const newTask = new Tasks(taskName, taskDescription, taskDate);
-  allTasks.push(newTask);
+    const taskName = task.name;
+    const taskDescription = task.description;
+    const taskDate = task.date;
 
-  const containerCurrentTasks = document.createElement("div");
-  containerCurrentTasks.className = "container-current-tasks";
+    const taskBox = document.createElement("div");
+    taskBox.className = "task-box";
 
-  const taskNamePrint = document.createElement("div");
-  taskNamePrint.textContent = taskName;
+    const containerCurrentTasks = document.createElement("div");
+    containerCurrentTasks.className = "container-current-tasks";
 
-  const taskDescriptionPrint = document.createElement("div");
-  taskDescriptionPrint.textContent = taskDescription;
+    const tasksDiv = document.createElement("div");
+    tasksDiv.className = "tasks-div";
 
-  const taskDatePrint = document.createElement("div");
-  taskDatePrint.textContent = taskDate;
+    const taskProgress = document.createElement("input");
+    taskProgress.type = "checkbox";
+    taskProgress.className = "task-progress";
 
-  containerCurrentTasks.appendChild(taskNamePrint);
-  containerCurrentTasks.appendChild(taskDescriptionPrint);
-  containerCurrentTasks.appendChild(taskDatePrint);
-  content.append(containerCurrentTasks);
+    const taskNamePrint = document.createElement("div");
+    taskNamePrint.textContent = taskName;
+
+    const taskDescriptionPrint = document.createElement("div");
+    taskDescriptionPrint.textContent = taskDescription;
+
+    const taskDatePrint = document.createElement("div");
+    taskDatePrint.textContent = taskDate;
+
+    tasksDiv.append(taskProgress);
+    taskBox.append(taskNamePrint, taskDescriptionPrint, taskDatePrint);
+    containerCurrentTasks.append(tasksDiv, taskBox);
+    content.append(containerCurrentTasks);
+  }
 
   removeForm();
 }
@@ -114,4 +130,30 @@ function removeForm() {
   taskContainer.remove();
 }
 
-export default initializeForm;
+function removeTask() {
+  const taskProgress = document.querySelector(".task-progress");
+  if (taskProgress) {
+    taskProgress.addEventListener("click", () => {
+      const currentTask = document.querySelector(".container-current-tasks");
+      currentTask.remove();
+    });
+  }
+}
+
+function addNewTask() {
+  const taskNameInput = document.querySelector(".task-name");
+  const taskDescriptionInput = document.querySelector(".task-description");
+  const taskDateInput = document.querySelector(".task-date");
+
+  const taskName = taskNameInput.value;
+  const taskDescription = taskDescriptionInput.value;
+  const taskDate = taskDateInput.value;
+
+  allTasks.push({
+    name: taskName,
+    description: taskDescription,
+    taskDate: taskDate,
+  });
+}
+
+export { initializeForm };
