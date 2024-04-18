@@ -18,7 +18,7 @@ const closedTasks = [
   {
     name: "Gym",
     description: "Renew the gym membership.",
-    date: "20204-05-02",
+    date: "2024-05-02",
   },
 ];
 
@@ -146,9 +146,10 @@ function removeTask() {
     element.addEventListener("click", () => {
       const currentTask = element.closest(".container-current-tasks");
       if (currentTask) {
-        let finishedTask = allTasks.splice(index, 1);
-        closedTasks.push(finishedTask);
         currentTask.remove();
+        let finishedTask = allTasks.splice(index, 1)[0];
+        closedTasks.push(finishedTask);
+        console.log(finishedTask, closedTasks);
       }
     });
   });
@@ -179,4 +180,13 @@ function clearTasks() {
   }
 }
 
-export { initializeForm, clearTasks };
+function printFinishedTasks() {
+  const sideBarButtons = document.querySelector(".tasks ul");
+  const finishedTask = sideBarButtons.children[2];
+  finishedTask.addEventListener("click", () => {
+    clearTasks();
+    printTask(closedTasks);
+  });
+}
+
+export { initializeForm, clearTasks, printFinishedTasks };
