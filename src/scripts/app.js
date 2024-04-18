@@ -14,12 +14,21 @@ const allTasks = [
   },
 ];
 
+const closedTasks = [
+  {
+    name: "Gym",
+    description: "Renew the gym membership.",
+    date: "20204-05-02",
+  },
+];
+
 const content = document.querySelector(".content");
 const addTaskBox = document.querySelector(".add-task-box");
 const addButton = document.querySelector(".add-task");
 
 function initializeForm() {
   addButton.addEventListener("click", () => {
+    clearTasks();
     const form = document.createElement("form");
     const taskDiv = document.createElement("div");
     taskDiv.className = "taskContainer";
@@ -123,6 +132,7 @@ function printTask(tasks) {
   }
 
   removeForm();
+  removeTask();
 }
 
 function removeForm() {
@@ -131,15 +141,18 @@ function removeForm() {
 }
 
 function removeTask() {
-  const taskProgress = document.querySelector(".task-progress");
-  if (taskProgress) {
-    taskProgress.addEventListener("click", () => {
-      const currentTask = document.querySelector(".container-current-tasks");
-      currentTask.remove();
+  const taskProgress = document.querySelectorAll(".task-progress");
+  taskProgress.forEach((element, index) => {
+    element.addEventListener("click", () => {
+      const currentTask = element.closest(".container-current-tasks");
+      if (currentTask) {
+        let finishedTask = allTasks.splice(index, 1);
+        closedTasks.push(finishedTask);
+        currentTask.remove();
+      }
     });
-  }
+  });
 }
-
 function addNewTask() {
   const taskNameInput = document.querySelector(".task-name");
   const taskDescriptionInput = document.querySelector(".task-description");
@@ -156,4 +169,14 @@ function addNewTask() {
   });
 }
 
-export { initializeForm };
+function clearTasks() {
+  const allCurrentTasks = document.querySelectorAll(".container-current-tasks");
+  if (allCurrentTasks) {
+    allCurrentTasks.forEach((element) => {
+      console.log(element);
+      element.remove();
+    });
+  }
+}
+
+export { initializeForm, clearTasks };
