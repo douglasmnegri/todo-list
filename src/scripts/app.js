@@ -1,26 +1,24 @@
 import { create } from "lodash";
 import { format, compareAsc } from "date-fns";
 
+let taskIdCounter = 2;
+
 const allTasks = [
   {
     name: "Super Market",
     description: "Buy eggs, milk and bread.",
-    date: "2024-04-29",
+    date: "18-04-2024",
+    id: "0",
   },
   {
     name: "Read Book",
     description: "Start to read the new novel from Stephen King",
-    date: "2024-05-01",
+    date: "18-04-2024",
+    id: "1",
   },
 ];
 
-const closedTasks = [
-  {
-    name: "Gym",
-    description: "Renew the gym membership.",
-    date: "2024-05-02",
-  },
-];
+const closedTasks = [];
 
 const content = document.querySelector(".content");
 const addTaskBox = document.querySelector(".add-task-box");
@@ -108,6 +106,7 @@ function printTask(tasks) {
 
     const containerCurrentTasks = document.createElement("div");
     containerCurrentTasks.className = "container-current-tasks";
+    containerCurrentTasks.dataset.taskId = task.id; // Set dataset.taskId attribute
 
     const tasksDiv = document.createElement("div");
     tasksDiv.className = "tasks-div";
@@ -137,41 +136,60 @@ function printTask(tasks) {
 
 function removeForm() {
   const taskContainer = document.querySelector(".taskContainer");
-  taskContainer.remove();
+  if (taskContainer) {
+    taskContainer.remove();
+  }
 }
 
 function removeTask() {
   const taskProgress = document.querySelectorAll(".task-progress");
-  taskProgress.forEach((element, index) => {
-    element.addEventListener("click", () => {
-      const currentTask = element.closest(".container-current-tasks");
-      if (currentTask) {
-        currentTask.remove();
-        let finishedTask = allTasks.splice(index, 1)[0];
-        closedTasks.push(finishedTask);
-        console.log(finishedTask, closedTasks);
-      }
+
+  if (taskProgress.length > 0) {
+    taskProgress.forEach((element) => {
+      element.addEventListener("click", (event) => {
+        const currentTaskBox = event.target.closest(".container-current-tasks");
+        if (currentTaskBox) {
+          const taskIdToRemove = currentTaskBox.dataset.taskId;
+          const index = allTasks.findIndex((task) => task.id == taskIdToRemove);
+          if (index !== -1) {
+            const finishedTask = allTasks.splice(index, 1);
+            closedTasks.push(finishedTask[0]);
+            currentTaskBox.remove();
+            console.log("Task removed:", taskIdToRemove);
+            console.log("Remaining tasks:", allTasks);
+          }
+        }
+      });
     });
-  });
+  }
 }
+
+
 function addNewTask() {
   const taskNameInput = document.querySelector(".task-name");
   const taskDescriptionInput = document.querySelector(".task-description");
   const taskDateInput = document.querySelector(".task-date");
+  const dateBeforeFormat = taskDateInput.value;
+  const [year, month, day] = dateBeforeFormat.split("-");
 
   const taskName = taskNameInput.value;
   const taskDescription = taskDescriptionInput.value;
-  const taskDate = taskDateInput.value;
+  const taskDate = format(new Date(year, month - 1, day), "dd-MM-yyyy");
+  const taskId = ++taskIdCounter;
 
   allTasks.push({
     name: taskName,
     description: taskDescription,
-    taskDate: taskDate,
+    date: taskDate,
+    id: taskId,
   });
+
+  console.log(allTasks);
 }
 
 function clearTasks() {
   const allCurrentTasks = document.querySelectorAll(".container-current-tasks");
+  console.log(allCurrentTasks);
   if (allCurrentTasks) {
     allCurrentTasks.forEach((element) => {
       console.log(element);
@@ -189,4 +207,27 @@ function printFinishedTasks() {
   });
 }
 
-export { initializeForm, clearTasks, printFinishedTasks };
+function printTasksToday(tasks) {
+  const sideBarButtons = document.querySelector(".tasks ul");
+  const tasksForToday = sideBarButtons.children[0];
+  const today = new Date();
+  const todayCorrectFormat = format(today, "dd-MM-yyyy");
+  tasksForToday.addEventListener("click", () => {
+    clearTasks();
+    removeTask();
+    const tasksToday = tasks.filter((task) => task.date === todayCorrectFormat);
+    if (tasksToday.length > 0) {
+      printTask(tasksToday);
+    }
+    console.log("There's no tasks for today");
+  });
+}
+
+export {
+  initializeForm,
+  clearTasks,
+  printFinishedTasks,
+  printTasksToday,
+  allTasks,
+  removeTask,
+};
