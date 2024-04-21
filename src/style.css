@@ -220,6 +220,13 @@ form {
   gap: 10px;
 }
 
+.icon-div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5em;
+}
+
 input[type="checkbox"] {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -315,7 +322,7 @@ input label {
 
 .task-wrapper {
   display: flex;
-  align-items: center; 
+  align-items: center;
 }
 
 .finish-mark {

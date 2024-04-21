@@ -1,4 +1,4 @@
-import { create } from "lodash";
+import { create, remove } from "lodash";
 import { format, compareAsc, add, intervalToDuration } from "date-fns";
 
 let taskIdCounter = 2;
@@ -54,12 +54,19 @@ function initializeForm() {
 
     const tagSelect = document.createElement("select");
     tagSelect.className = "task-tags";
-    
-    const tagOptions = ["Personal", "Work", "Study", "Health", "Home", "Urgent"];
-    tagOptions.forEach(tag => {
+
+    const tagOptions = [
+      "Personal",
+      "Work",
+      "Study",
+      "Health",
+      "Home",
+      "Urgent",
+    ];
+    tagOptions.forEach((tag) => {
       const option = document.createElement("option");
       option.text = tag;
-      option.value = tag.toLowerCase(); 
+      option.value = tag.toLowerCase();
       tagSelect.add(option);
     });
 
@@ -84,15 +91,13 @@ function initializeForm() {
     form.appendChild(taskDateLabel);
     form.appendChild(taskDateInput);
     form.appendChild(tagLabel);
-    form.appendChild(tagSelect); 
+    form.appendChild(tagSelect);
     taskButtonDiv.appendChild(addTaskButton);
     taskButtonDiv.appendChild(cancelTaskButton);
     form.appendChild(taskButtonDiv);
 
     taskDiv.appendChild(form);
     addTaskBox.appendChild(taskDiv);
-
-    addButton.disabled = true;
 
     addTaskButton.addEventListener("click", (e) => {
       e.preventDefault();
@@ -104,6 +109,7 @@ function initializeForm() {
     cancelTaskButton.addEventListener("click", (e) => {
       e.preventDefault();
       removeForm();
+      printTask(allTasks);
       addButton.disabled = false;
     });
   });
@@ -141,14 +147,27 @@ function printTask(tasks) {
     const taskDatePrint = document.createElement("div");
     taskDatePrint.textContent = taskDate;
 
+    const iconDiv = document.createElement("div");
+    iconDiv.className = "icon-div";
+
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    editButton.className = "edit-button";
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Remove";
+    deleteButton.className = "delete-button";
+
+    iconDiv.append(editButton, deleteButton);
     tasksDiv.append(taskProgress);
     taskBox.append(taskNamePrint, taskDescriptionPrint, taskDatePrint);
-    containerCurrentTasks.append(tasksDiv, taskBox);
+    containerCurrentTasks.append(tasksDiv, taskBox, iconDiv);
     content.append(containerCurrentTasks);
   }
 
   removeForm();
   removeTask();
+  deleteTask();
 }
 
 function removeForm() {
@@ -168,7 +187,6 @@ function removeTask() {
         const removedTask = allTasks.splice(taskIndex, 1);
         let today = new Date();
         let dateOfEnd = format(today, "dd-MM-yyyy");
-        console.log(dateOfEnd);
         removedTask[0].end = dateOfEnd;
         closedTasks.push(removedTask[0]);
 
@@ -183,7 +201,7 @@ function addNewTask() {
   const taskNameInput = document.querySelector(".task-name");
   const taskDescriptionInput = document.querySelector(".task-description");
   const taskDateInput = document.querySelector(".task-date");
-  const taskTagInput = document.querySelector(".task-tags")
+  const taskTagInput = document.querySelector(".task-tags");
   const dateBeforeFormat = taskDateInput.value;
   const [year, month, day] = dateBeforeFormat.split("-");
 
@@ -198,7 +216,7 @@ function addNewTask() {
     description: taskDescription,
     date: taskDate,
     id: taskId,
-    tag: taskTag
+    tag: taskTag,
   });
 }
 
@@ -287,9 +305,7 @@ function printWeeklyTasks(tasks) {
         end: result,
       });
       return interval.days > 0 && interval.days <= 7;
-
     });
-
 
     if (tasksThisWeek.length > 0) {
       printTask(tasksThisWeek);
@@ -307,6 +323,22 @@ function printInbox() {
   });
 }
 
+function deleteTask() {
+  const deleteButtons = document.querySelectorAll(".delete-button");
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const taskId = event.target.parentElement.parentElement.id;
+      const taskIndex = allTasks.findIndex((t) => t.id === taskId);
+      allTasks.splice(taskIndex, 1);
+      console.log(taskId, taskIndex);
+      const taskBoxRemove = document.getElementById(taskId);
+      taskBoxRemove.remove();
+      console.log("Task deleted successfully");
+      console.log(allTasks);
+    });
+  });
+}
+
 export {
   initializeForm,
   clearTasks,
@@ -316,5 +348,6 @@ export {
   removeTask,
   printWeeklyTasks,
   closedTasks,
-  printInbox
+  printInbox,
+  deleteTask,
 };

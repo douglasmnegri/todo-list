@@ -8,14 +8,16 @@ import {
   allTasks,
   printWeeklyTasks,
   closedTasks,
-  printInbox
+  printInbox,
+  deleteTask
 } from "./scripts/app.js";
 import { toggleSideBar } from "./scripts/side-bar.js";
 
-initializeForm();
-clearTasks();
 toggleSideBar();
 printFinishedTasks(closedTasks);
 printTodayTasks(allTasks);
 printWeeklyTasks(allTasks);
 printInbox();
+initializeForm();
+clearTasks();
+deleteTask();
