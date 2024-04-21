@@ -155,7 +155,7 @@ function printTask(tasks) {
     editButton.className = "edit-button";
 
     const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Remove";
+    deleteButton.textContent = "Delete";
     deleteButton.className = "delete-button";
 
     iconDiv.append(editButton, deleteButton);
@@ -167,7 +167,7 @@ function printTask(tasks) {
 
   removeForm();
   removeTask();
-  deleteTask();
+  changeTask();
 }
 
 function removeForm() {
@@ -323,21 +323,80 @@ function printInbox() {
   });
 }
 
-function deleteTask() {
-  const deleteButtons = document.querySelectorAll(".delete-button");
-  deleteButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      const taskId = event.target.parentElement.parentElement.id;
-      const taskIndex = allTasks.findIndex((t) => t.id === taskId);
+// function changeTask() {
+//   const iconDivs = document.querySelectorAll(".icon-div");
+//   iconDivs.forEach((iconDiv) => {
+//     iconDiv.addEventListener("click", (event) => {
+//       const clickedButton = event.target;
+//       if (clickedButton.textContent === "Edit") {
+//         console.log("Edit button clicked");
+//       }
+
+//       if (clickedButton.classList.contains("delete-button")) {
+//         const taskID = event.target.parentElement.parentElement.id;
+//         const taskIndex = allTasks.findIndex((t) => t.id == taskID);
+//         allTasks.splice(taskIndex, 1);
+//         const taskBoxRemove = document.getElementById(taskID);
+//         taskBoxRemove.remove();
+//       }
+//     });
+//   });
+// }
+
+function changeTask() {
+  const containerCurrentTasks = document.querySelectorAll(".container-current-tasks");
+  containerCurrentTasks.forEach(taskContainer => {
+    const deleteButton = taskContainer.querySelector(".delete-button");
+    const editButton = taskContainer.querySelector(".edit-button");
+    const taskName = taskContainer.querySelector(".task-box > div:first-child");
+    const taskDescription = taskContainer.querySelector(".task-box > div:nth-child(2)");
+
+    deleteButton.addEventListener("click", (event) => {
+      const taskID = event.currentTarget.parentElement.parentElement.id;
+      const taskIndex = allTasks.findIndex((t) => t.id == taskID);
       allTasks.splice(taskIndex, 1);
-      console.log(taskId, taskIndex);
-      const taskBoxRemove = document.getElementById(taskId);
+      const taskBoxRemove = document.getElementById(taskID);
       taskBoxRemove.remove();
-      console.log("Task deleted successfully");
-      console.log(allTasks);
+    });
+
+    editButton.addEventListener("click", (event) => {
+      if (editButton.textContent === "Edit") {
+        const inputName = document.createElement("input");
+        const inputDescription = document.createElement("input");
+        
+        inputDescription.type = 'text';
+        inputDescription.value = taskDescription.textContent;
+        taskDescription.textContent = '';
+        taskDescription.appendChild(inputDescription);
+
+        inputName.type = 'text';
+        inputName.value = taskName.textContent;
+        taskName.textContent = ''; 
+        taskName.appendChild(inputName); 
+        
+        editButton.textContent = "Save";
+      } else if (editButton.textContent === "Save") {
+        const updatedTaskName = taskName.querySelector("input").value;
+        const updatedTaskDescription = taskDescription.querySelector("input").value;
+
+        const taskID = event.currentTarget.parentElement.parentElement.id;
+        const taskIndex = allTasks.findIndex((t) => t.id == taskID);
+        allTasks[taskIndex].name = updatedTaskName;
+        allTasks[taskIndex].description = updatedTaskDescription;
+        
+        taskName.textContent = ''; 
+        taskName.textContent = updatedTaskName;
+        taskDescription.textContent = '';
+        taskDescription.textContent = updatedTaskDescription;
+
+        editButton.textContent = "Edit";
+        console.log(allTasks);
+      }
     });
   });
 }
+
+
 
 export {
   initializeForm,
@@ -349,5 +408,5 @@ export {
   printWeeklyTasks,
   closedTasks,
   printInbox,
-  deleteTask,
+  changeTask,
 };

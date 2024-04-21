@@ -9,7 +9,7 @@ import {
   printWeeklyTasks,
   closedTasks,
   printInbox,
-  deleteTask
+  changeTask
 } from "./scripts/app.js";
 import { toggleSideBar } from "./scripts/side-bar.js";
 
@@ -20,4 +20,4 @@ printWeeklyTasks(allTasks);
 printInbox();
 initializeForm();
 clearTasks();
-deleteTask();
+changeTask();
