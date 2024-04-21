@@ -4,3 +4,6 @@ node_modules/
 # Ignore data-fsn directory
 data-fsn/
 
+# Ignore dist
+dist/bundle.js
+

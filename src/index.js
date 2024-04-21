@@ -6,15 +6,14 @@ import {
   printFinishedTasks,
   printTodayTasks,
   allTasks,
-  removeTask,
   printWeeklyTasks,
+  closedTasks
 } from "./scripts/app.js";
 import { toggleSideBar } from "./scripts/side-bar.js";
 
 initializeForm();
 clearTasks();
 toggleSideBar();
-printFinishedTasks();
+printFinishedTasks(closedTasks);
 printTodayTasks(allTasks);
-removeTask();
 printWeeklyTasks(allTasks);

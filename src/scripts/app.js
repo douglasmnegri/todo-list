@@ -7,7 +7,7 @@ const allTasks = [
   {
     name: "Super Market",
     description: "Buy eggs, milk and bread.",
-    date: "20-04-2024",
+    date: "21-04-2024",
     id: "0",
   },
   {
@@ -144,18 +144,18 @@ function removeForm() {
 
 function removeTask() {
   const taskProgress = document.querySelectorAll(".task-progress");
-
   if (taskProgress.length > 0) {
     taskProgress.forEach((element) => {
-      console.log(element);
       element.addEventListener("click", (event) => {
-        console.log("bazimgaoz");
-        console.log(allTasks);
         const taskID = event.target.dataset.id;
         const taskIndex = allTasks.findIndex((t) => t.id == taskID);
         const removedTask = allTasks.splice(taskIndex, 1);
+        let today = new Date();
+        let dateOfEnd = format(today, "dd-MM-yyyy");
+        console.log(dateOfEnd);
+        removedTask[0].end = dateOfEnd;
         closedTasks.push(removedTask[0]);
-        console.log(closedTasks, removedTask);
+
         const taskBoxRemove = document.getElementById(taskID);
         taskBoxRemove.remove();
       });
@@ -181,13 +181,10 @@ function addNewTask() {
     date: taskDate,
     id: taskId,
   });
-
-  console.log(allTasks);
 }
 
 function clearTasks() {
   const allCurrentTasks = document.querySelectorAll(".container-current-tasks");
-  console.log(allCurrentTasks);
   if (allCurrentTasks) {
     allCurrentTasks.forEach((element) => {
       console.log(element);
@@ -196,18 +193,47 @@ function clearTasks() {
   }
 }
 
-function printFinishedTasks() {
+function printFinishedTasks(tasks) {
   const sideBarButtons = document.querySelector(".tasks ul");
   const finishedTask = sideBarButtons.children[2];
+  const listOfFinishedTasks = document.createElement("h1");
+
   finishedTask.addEventListener("click", () => {
     clearTasks();
-    printTask(closedTasks);
+    for (let i = 0; i < tasks.length; i++) {
+      let task = tasks[i];
+
+      const containerCurrentTasks = document.createElement("div");
+      containerCurrentTasks.className = "container-current-tasks";
+
+      const boxOfFinishedTasks = document.createElement("div");
+      boxOfFinishedTasks.className = "box-finished-tasks";
+
+      const taskWrapper = document.createElement("div");
+      taskWrapper.className = "task-wrapper";
+
+      const finishMark = document.createElement("span");
+      finishMark.textContent = "✓"; 
+      finishMark.className = "finish-mark"; 
+
+      const taskName = document.createElement("div");
+      taskName.textContent = task.name;
+
+      const endDate = document.createElement("div");
+      endDate.textContent = task.end;
+
+      taskWrapper.append(finishMark, taskName); 
+      boxOfFinishedTasks.append(taskWrapper, endDate);
+      containerCurrentTasks.append(boxOfFinishedTasks);
+      content.append(listOfFinishedTasks, containerCurrentTasks);
+    }
   });
 }
 
 function printTodayTasks(tasks) {
   const sideBarButtons = document.querySelector(".tasks ul");
   const tasksForToday = sideBarButtons.children[0];
+
   const today = new Date();
   const todayCorrectFormat = format(today, "dd-MM-yyyy");
   tasksForToday.addEventListener("click", () => {
@@ -259,4 +285,5 @@ export {
   allTasks,
   removeTask,
   printWeeklyTasks,
+  closedTasks,
 };

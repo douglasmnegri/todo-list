@@ -136,7 +136,6 @@ h2 {
   gap: 1.5em;
   padding: 1em;
   background-color: var(--secondary-color);
-  height: calc(100vh - 20px);
   border-left: solid black 2px;
   border-right: solid black 2px;
   transition: transform 0.5s ease;
@@ -305,4 +304,20 @@ input label {
 .tasks ul li:hover {
   opacity: 1;
   background-color: white;
+}
+
+.box-finished-tasks {
+  display: flex;
+  flex-direction: column;
+  width: inherit;
+}
+
+.task-wrapper {
+  display: flex;
+  align-items: center; 
+}
+
+.finish-mark {
+  margin-right: 5px;
+  color: var(--primary-color);
 }
