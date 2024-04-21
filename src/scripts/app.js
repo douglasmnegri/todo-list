@@ -1,5 +1,5 @@
 import { create } from "lodash";
-import { format, compareAsc } from "date-fns";
+import { format, compareAsc, add, intervalToDuration } from "date-fns";
 
 let taskIdCounter = 2;
 
@@ -7,13 +7,13 @@ const allTasks = [
   {
     name: "Super Market",
     description: "Buy eggs, milk and bread.",
-    date: "18-04-2024",
+    date: "20-04-2024",
     id: "0",
   },
   {
     name: "Read Book",
     description: "Start to read the new novel from Stephen King",
-    date: "18-04-2024",
+    date: "22-04-2024",
     id: "1",
   },
 ];
@@ -106,7 +106,7 @@ function printTask(tasks) {
 
     const containerCurrentTasks = document.createElement("div");
     containerCurrentTasks.className = "container-current-tasks";
-    containerCurrentTasks.dataset.taskId = task.id; // Set dataset.taskId attribute
+    containerCurrentTasks.id = task.id;
 
     const tasksDiv = document.createElement("div");
     tasksDiv.className = "tasks-div";
@@ -114,6 +114,7 @@ function printTask(tasks) {
     const taskProgress = document.createElement("input");
     taskProgress.type = "checkbox";
     taskProgress.className = "task-progress";
+    taskProgress.dataset.id = task.id;
 
     const taskNamePrint = document.createElement("div");
     taskNamePrint.textContent = taskName;
@@ -146,24 +147,21 @@ function removeTask() {
 
   if (taskProgress.length > 0) {
     taskProgress.forEach((element) => {
+      console.log(element);
       element.addEventListener("click", (event) => {
-        const currentTaskBox = event.target.closest(".container-current-tasks");
-        if (currentTaskBox) {
-          const taskIdToRemove = currentTaskBox.dataset.taskId;
-          const index = allTasks.findIndex((task) => task.id == taskIdToRemove);
-          if (index !== -1) {
-            const finishedTask = allTasks.splice(index, 1);
-            closedTasks.push(finishedTask[0]);
-            currentTaskBox.remove();
-            console.log("Task removed:", taskIdToRemove);
-            console.log("Remaining tasks:", allTasks);
-          }
-        }
+        console.log("bazimgaoz");
+        console.log(allTasks);
+        const taskID = event.target.dataset.id;
+        const taskIndex = allTasks.findIndex((t) => t.id == taskID);
+        const removedTask = allTasks.splice(taskIndex, 1);
+        closedTasks.push(removedTask[0]);
+        console.log(closedTasks, removedTask);
+        const taskBoxRemove = document.getElementById(taskID);
+        taskBoxRemove.remove();
       });
     });
   }
 }
-
 
 function addNewTask() {
   const taskNameInput = document.querySelector(".task-name");
@@ -207,7 +205,7 @@ function printFinishedTasks() {
   });
 }
 
-function printTasksToday(tasks) {
+function printTodayTasks(tasks) {
   const sideBarButtons = document.querySelector(".tasks ul");
   const tasksForToday = sideBarButtons.children[0];
   const today = new Date();
@@ -223,11 +221,42 @@ function printTasksToday(tasks) {
   });
 }
 
+function printWeeklyTasks(tasks) {
+  const sideBarButtons = document.querySelector(".tasks ul");
+  const weeklyTasks = sideBarButtons.children[1];
+  const result = add(new Date(), {
+    weeks: 1,
+  });
+
+  weeklyTasks.addEventListener("click", () => {
+    clearTasks();
+    removeTask();
+
+    const tasksThisWeek = tasks.filter((task) => {
+      const date = task.date;
+      const [day, month, year] = date.split("-");
+      const currentDate = new Date(year, month - 1, day);
+
+      const interval = intervalToDuration({
+        start: currentDate,
+        end: result,
+      });
+
+      return interval.days > 0 && interval.days < 7;
+    });
+
+    if (tasksThisWeek.length > 0) {
+      printTask(tasksThisWeek);
+    }
+  });
+}
+
 export {
   initializeForm,
   clearTasks,
   printFinishedTasks,
-  printTasksToday,
+  printTodayTasks,
   allTasks,
   removeTask,
+  printWeeklyTasks,
 };
