@@ -7,7 +7,8 @@ import {
   printTodayTasks,
   allTasks,
   printWeeklyTasks,
-  closedTasks
+  closedTasks,
+  printInbox
 } from "./scripts/app.js";
 import { toggleSideBar } from "./scripts/side-bar.js";
 
@@ -17,3 +18,4 @@ toggleSideBar();
 printFinishedTasks(closedTasks);
 printTodayTasks(allTasks);
 printWeeklyTasks(allTasks);
+printInbox();

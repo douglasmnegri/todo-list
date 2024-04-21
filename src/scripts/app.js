@@ -52,6 +52,20 @@ function initializeForm() {
     const taskDateLabel = document.createElement("label");
     taskDateLabel.textContent = "Due date: ";
 
+    const tagSelect = document.createElement("select");
+    tagSelect.className = "task-tags";
+    
+    const tagOptions = ["Personal", "Work", "Study", "Health", "Home", "Urgent"];
+    tagOptions.forEach(tag => {
+      const option = document.createElement("option");
+      option.text = tag;
+      option.value = tag.toLowerCase(); 
+      tagSelect.add(option);
+    });
+
+    const tagLabel = document.createElement("label");
+    tagLabel.textContent = "Tags: ";
+
     const taskButtonDiv = document.createElement("div");
     taskButtonDiv.className = "task-button-div";
 
@@ -69,6 +83,8 @@ function initializeForm() {
     form.appendChild(taskDescriptionInput);
     form.appendChild(taskDateLabel);
     form.appendChild(taskDateInput);
+    form.appendChild(tagLabel);
+    form.appendChild(tagSelect); 
     taskButtonDiv.appendChild(addTaskButton);
     taskButtonDiv.appendChild(cancelTaskButton);
     form.appendChild(taskButtonDiv);
@@ -167,6 +183,7 @@ function addNewTask() {
   const taskNameInput = document.querySelector(".task-name");
   const taskDescriptionInput = document.querySelector(".task-description");
   const taskDateInput = document.querySelector(".task-date");
+  const taskTagInput = document.querySelector(".task-tags")
   const dateBeforeFormat = taskDateInput.value;
   const [year, month, day] = dateBeforeFormat.split("-");
 
@@ -174,12 +191,14 @@ function addNewTask() {
   const taskDescription = taskDescriptionInput.value;
   const taskDate = format(new Date(year, month - 1, day), "dd-MM-yyyy");
   const taskId = ++taskIdCounter;
+  const taskTag = taskTagInput.value;
 
   allTasks.push({
     name: taskName,
     description: taskDescription,
     date: taskDate,
     id: taskId,
+    tag: taskTag
   });
 }
 
@@ -195,7 +214,7 @@ function clearTasks() {
 
 function printFinishedTasks(tasks) {
   const sideBarButtons = document.querySelector(".tasks ul");
-  const finishedTask = sideBarButtons.children[2];
+  const finishedTask = sideBarButtons.children[3];
   const listOfFinishedTasks = document.createElement("h1");
 
   finishedTask.addEventListener("click", () => {
@@ -213,8 +232,8 @@ function printFinishedTasks(tasks) {
       taskWrapper.className = "task-wrapper";
 
       const finishMark = document.createElement("span");
-      finishMark.textContent = "✓"; 
-      finishMark.className = "finish-mark"; 
+      finishMark.textContent = "✓";
+      finishMark.className = "finish-mark";
 
       const taskName = document.createElement("div");
       taskName.textContent = task.name;
@@ -222,7 +241,7 @@ function printFinishedTasks(tasks) {
       const endDate = document.createElement("div");
       endDate.textContent = task.end;
 
-      taskWrapper.append(finishMark, taskName); 
+      taskWrapper.append(finishMark, taskName);
       boxOfFinishedTasks.append(taskWrapper, endDate);
       containerCurrentTasks.append(boxOfFinishedTasks);
       content.append(listOfFinishedTasks, containerCurrentTasks);
@@ -232,7 +251,7 @@ function printFinishedTasks(tasks) {
 
 function printTodayTasks(tasks) {
   const sideBarButtons = document.querySelector(".tasks ul");
-  const tasksForToday = sideBarButtons.children[0];
+  const tasksForToday = sideBarButtons.children[1];
 
   const today = new Date();
   const todayCorrectFormat = format(today, "dd-MM-yyyy");
@@ -249,7 +268,7 @@ function printTodayTasks(tasks) {
 
 function printWeeklyTasks(tasks) {
   const sideBarButtons = document.querySelector(".tasks ul");
-  const weeklyTasks = sideBarButtons.children[1];
+  const weeklyTasks = sideBarButtons.children[2];
   const result = add(new Date(), {
     weeks: 1,
   });
@@ -267,13 +286,24 @@ function printWeeklyTasks(tasks) {
         start: currentDate,
         end: result,
       });
+      return interval.days > 0 && interval.days <= 7;
 
-      return interval.days > 0 && interval.days < 7;
     });
+
 
     if (tasksThisWeek.length > 0) {
       printTask(tasksThisWeek);
     }
+  });
+}
+
+function printInbox() {
+  const sideBarButtons = document.querySelector(".tasks ul");
+  const inbox = sideBarButtons.children[0];
+
+  inbox.addEventListener("click", () => {
+    clearTasks();
+    printTask(allTasks);
   });
 }
 
@@ -286,4 +316,5 @@ export {
   removeTask,
   printWeeklyTasks,
   closedTasks,
+  printInbox
 };

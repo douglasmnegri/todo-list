@@ -237,7 +237,8 @@ input[type="checkbox"]:hover {
   background-color: var(--primary-color);
 }
 
-input {
+input,
+select {
   margin-bottom: 20px;
 }
 
