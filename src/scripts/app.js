@@ -222,11 +222,15 @@ function addNewTask() {
 
 function clearTasks() {
   const allCurrentTasks = document.querySelectorAll(".container-current-tasks");
+  const tasksAvailable = document.querySelector(".no-tasks");
   if (allCurrentTasks) {
     allCurrentTasks.forEach((element) => {
       console.log(element);
       element.remove();
     });
+  }
+  if (tasksAvailable) {
+    tasksAvailable.remove();
   }
 }
 
@@ -270,7 +274,7 @@ function printFinishedTasks(tasks) {
 function printTodayTasks(tasks) {
   const sideBarButtons = document.querySelector(".tasks ul");
   const tasksForToday = sideBarButtons.children[1];
-
+  const content = document.querySelector(".content");
   const today = new Date();
   const todayCorrectFormat = format(today, "dd-MM-yyyy");
   tasksForToday.addEventListener("click", () => {
@@ -280,13 +284,18 @@ function printTodayTasks(tasks) {
     if (tasksToday.length > 0) {
       printTask(tasksToday);
     }
-    console.log("There's no tasks for today");
+    const noTasksAvailable = document.createElement("div");
+    noTasksAvailable.className = "no-tasks";
+    noTasksAvailable.textContent = "There's no tasks for today!";
+    content.append(noTasksAvailable);
   });
 }
 
 function printWeeklyTasks(tasks) {
   const sideBarButtons = document.querySelector(".tasks ul");
   const weeklyTasks = sideBarButtons.children[2];
+  const content = document.querySelector(".content");
+
   const result = add(new Date(), {
     weeks: 1,
   });
@@ -310,6 +319,10 @@ function printWeeklyTasks(tasks) {
     if (tasksThisWeek.length > 0) {
       printTask(tasksThisWeek);
     }
+    const noTasksAvailable = document.createElement("div");
+    noTasksAvailable.className = "no-tasks";
+    noTasksAvailable.textContent = "There's no tasks for this week!";
+    content.append(noTasksAvailable);
   });
 }
 
@@ -323,33 +336,20 @@ function printInbox() {
   });
 }
 
-// function changeTask() {
-//   const iconDivs = document.querySelectorAll(".icon-div");
-//   iconDivs.forEach((iconDiv) => {
-//     iconDiv.addEventListener("click", (event) => {
-//       const clickedButton = event.target;
-//       if (clickedButton.textContent === "Edit") {
-//         console.log("Edit button clicked");
-//       }
-
-//       if (clickedButton.classList.contains("delete-button")) {
-//         const taskID = event.target.parentElement.parentElement.id;
-//         const taskIndex = allTasks.findIndex((t) => t.id == taskID);
-//         allTasks.splice(taskIndex, 1);
-//         const taskBoxRemove = document.getElementById(taskID);
-//         taskBoxRemove.remove();
-//       }
-//     });
-//   });
-// }
-
 function changeTask() {
-  const containerCurrentTasks = document.querySelectorAll(".container-current-tasks");
-  containerCurrentTasks.forEach(taskContainer => {
+  const containerCurrentTasks = document.querySelectorAll(
+    ".container-current-tasks"
+  );
+  containerCurrentTasks.forEach((taskContainer) => {
     const deleteButton = taskContainer.querySelector(".delete-button");
     const editButton = taskContainer.querySelector(".edit-button");
     const taskName = taskContainer.querySelector(".task-box > div:first-child");
-    const taskDescription = taskContainer.querySelector(".task-box > div:nth-child(2)");
+    const taskDescription = taskContainer.querySelector(
+      ".task-box > div:nth-child(2)"
+    );
+    const taskDate = taskContainer.querySelector(
+      ".task-box > div:nth-child(3)"
+    );
 
     deleteButton.addEventListener("click", (event) => {
       const taskID = event.currentTarget.parentElement.parentElement.id;
@@ -363,31 +363,49 @@ function changeTask() {
       if (editButton.textContent === "Edit") {
         const inputName = document.createElement("input");
         const inputDescription = document.createElement("input");
-        
-        inputDescription.type = 'text';
+        const inputDate = document.createElement("input");
+
+        inputDate.type = "date";
+        inputDate.value = inputDate.textContent;
+        taskDate.textContent = "";
+        taskDate.appendChild(inputDate);
+
+        inputDescription.type = "text";
         inputDescription.value = taskDescription.textContent;
-        taskDescription.textContent = '';
+        taskDescription.textContent = "";
         taskDescription.appendChild(inputDescription);
 
-        inputName.type = 'text';
+        inputName.type = "text";
         inputName.value = taskName.textContent;
-        taskName.textContent = ''; 
-        taskName.appendChild(inputName); 
-        
+        taskName.textContent = "";
+        taskName.appendChild(inputName);
+
         editButton.textContent = "Save";
       } else if (editButton.textContent === "Save") {
         const updatedTaskName = taskName.querySelector("input").value;
-        const updatedTaskDescription = taskDescription.querySelector("input").value;
+        const updatedTaskDescription =
+          taskDescription.querySelector("input").value;
+        const updatedTaskDate = taskDate.querySelector("input").value;
+        const [year, month, day] = updatedTaskDate.split("-").map(Number);
+        const formattedDate = format(
+          new Date(year, month - 1, day),
+          "dd-MM-yyyy"
+        );
 
         const taskID = event.currentTarget.parentElement.parentElement.id;
         const taskIndex = allTasks.findIndex((t) => t.id == taskID);
         allTasks[taskIndex].name = updatedTaskName;
         allTasks[taskIndex].description = updatedTaskDescription;
-        
-        taskName.textContent = ''; 
+        allTasks[taskIndex].date = formattedDate;
+
+        taskName.textContent = "";
         taskName.textContent = updatedTaskName;
-        taskDescription.textContent = '';
+
+        taskDescription.textContent = "";
         taskDescription.textContent = updatedTaskDescription;
+
+        taskDate.textContent = "";
+        taskDate.textContent = formattedDate;
 
         editButton.textContent = "Edit";
         console.log(allTasks);
@@ -395,8 +413,6 @@ function changeTask() {
     });
   });
 }
-
-
 
 export {
   initializeForm,
