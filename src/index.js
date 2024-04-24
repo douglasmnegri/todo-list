@@ -9,9 +9,9 @@ import {
   printWeeklyTasks,
   closedTasks,
   printInbox,
-  changeTask
+  changeTask,
 } from "./scripts/app.js";
-import { toggleSideBar } from "./scripts/side-bar.js";
+import { toggleSideBar, initializeProjectForm } from "./scripts/side-bar.js";
 
 toggleSideBar();
 printFinishedTasks(closedTasks);
@@ -21,3 +21,6 @@ printInbox();
 initializeForm();
 clearTasks();
 changeTask();
+
+//Side-tab
+initializeProjectForm();

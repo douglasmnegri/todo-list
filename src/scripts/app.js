@@ -7,13 +7,13 @@ const allTasks = [
   {
     name: "Super Market",
     description: "Buy eggs, milk and bread.",
-    date: "21-04-2024",
+    date: "24-04-2024",
     id: "0",
   },
   {
     name: "Read Book",
     description: "Start to read the new novel from Stephen King",
-    date: "22-04-2024",
+    date: "26-04-2024",
     id: "1",
   },
 ];
@@ -283,11 +283,12 @@ function printTodayTasks(tasks) {
     const tasksToday = tasks.filter((task) => task.date === todayCorrectFormat);
     if (tasksToday.length > 0) {
       printTask(tasksToday);
+    } else {
+      const noTasksAvailable = document.createElement("div");
+      noTasksAvailable.className = "no-tasks";
+      noTasksAvailable.textContent = "There's no tasks for today! ";
+      content.append(noTasksAvailable);
     }
-    const noTasksAvailable = document.createElement("div");
-    noTasksAvailable.className = "no-tasks";
-    noTasksAvailable.textContent = "There's no tasks for today!";
-    content.append(noTasksAvailable);
   });
 }
 
@@ -317,12 +318,15 @@ function printWeeklyTasks(tasks) {
     });
 
     if (tasksThisWeek.length > 0) {
+      console.log(tasksThisWeek.length, tasksThisWeek);
       printTask(tasksThisWeek);
     }
+    else {
     const noTasksAvailable = document.createElement("div");
     noTasksAvailable.className = "no-tasks";
-    noTasksAvailable.textContent = "There's no tasks for this week!";
+    noTasksAvailable.textContent = "There's no tasks for this week! ";
     content.append(noTasksAvailable);
+  }
   });
 }
 
