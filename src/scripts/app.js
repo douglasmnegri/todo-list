@@ -151,12 +151,19 @@ function printTask(tasks) {
     iconDiv.className = "icon-div";
 
     const editButton = document.createElement("button");
-    editButton.textContent = "Edit";
     editButton.className = "edit-button";
 
+    const editIcon = document.createElement("i");
+    editIcon.className = "fa-regular fa-pen-to-square";
+
     const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Delete";
     deleteButton.className = "delete-button";
+
+    const deleteIcon = document.createElement("i");
+    deleteIcon.className = "fa-solid fa-trash";
+
+    deleteButton.appendChild(deleteIcon);
+    editButton.appendChild(editIcon);
 
     iconDiv.append(editButton, deleteButton);
     tasksDiv.append(taskProgress);
@@ -320,13 +327,12 @@ function printWeeklyTasks(tasks) {
     if (tasksThisWeek.length > 0) {
       console.log(tasksThisWeek.length, tasksThisWeek);
       printTask(tasksThisWeek);
+    } else {
+      const noTasksAvailable = document.createElement("div");
+      noTasksAvailable.className = "no-tasks";
+      noTasksAvailable.textContent = "There's no tasks for this week! ";
+      content.append(noTasksAvailable);
     }
-    else {
-    const noTasksAvailable = document.createElement("div");
-    noTasksAvailable.className = "no-tasks";
-    noTasksAvailable.textContent = "There's no tasks for this week! ";
-    content.append(noTasksAvailable);
-  }
   });
 }
 
@@ -364,7 +370,7 @@ function changeTask() {
     });
 
     editButton.addEventListener("click", (event) => {
-      if (editButton.textContent === "Edit") {
+      if (!editButton.classList.contains("editing")) {
         const inputName = document.createElement("input");
         const inputDescription = document.createElement("input");
         const inputDate = document.createElement("input");
@@ -385,7 +391,10 @@ function changeTask() {
         taskName.appendChild(inputName);
 
         editButton.textContent = "Save";
-      } else if (editButton.textContent === "Save") {
+        editButton.classList.add("editing");
+      }
+
+      if (editButton.classList.contains("editing")) {
         const updatedTaskName = taskName.querySelector("input").value;
         const updatedTaskDescription =
           taskDescription.querySelector("input").value;
@@ -411,8 +420,13 @@ function changeTask() {
         taskDate.textContent = "";
         taskDate.textContent = formattedDate;
 
-        editButton.textContent = "Edit";
-        console.log(allTasks);
+       // Append the edit icon back to the button
+       const editIcon = document.createElement("i");
+       editIcon.className = "fa-regular fa-pen-to-square";
+       editButton.textContent = "";
+       editButton.appendChild(editIcon);
+       
+       editButton.classList.remove("editing");
       }
     });
   });

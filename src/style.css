@@ -227,6 +227,34 @@ form {
   gap: 0.5em;
 }
 
+.delete-button {
+  background-color: transparent;
+  border: none;
+  color: grey;
+  cursor: pointer;
+  font-size: 1.2em;
+  outline: none;
+  transition: color 0.3s ease;
+}
+
+.delete-button:hover {
+  color: darkred;
+}
+
+.edit-button {
+  background-color: transparent;
+  border: none;
+  color: grey;
+  cursor: pointer;
+  font-size: 1.2em;
+  outline: none;
+  transition: color 0.3s ease;
+}
+
+.edit-button:hover {
+  color: navy;
+}
+
 input[type="checkbox"] {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -279,7 +307,7 @@ input label {
 }
 
 .button:hover {
-  background-color: #388e3c; /* Darker shade of primary color */
+  background-color: #388e3c;
 }
 
 .hamburger {
@@ -310,7 +338,8 @@ input label {
   transition: background-color 0.3s ease;
 }
 
-.tasks ul li:hover {
+.tasks ul li:hover,
+.projects-container ol li:hover {
   opacity: 1;
   background-color: white;
 }
@@ -381,6 +410,7 @@ input label {
   position: absolute;
   top: 10px;
   right: 10px;
+  font-size: 2em;
   cursor: pointer;
 }
 
@@ -391,8 +421,8 @@ h2 {
 
 input[type="text"],
 textarea {
-  width: 100%;
+  width: 90%;
   padding: 10px;
-  font-size: 18px;
+  font-size: 1em;
   margin-bottom: 20px;
 }
