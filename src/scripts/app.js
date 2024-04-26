@@ -190,6 +190,7 @@ function removeTask() {
     taskProgress.forEach((element) => {
       element.addEventListener("click", (event) => {
         const taskID = event.target.dataset.id;
+        console.log(taskID);
         const taskIndex = allTasks.findIndex((t) => t.id == taskID);
         const removedTask = allTasks.splice(taskIndex, 1);
         let today = new Date();
@@ -247,6 +248,7 @@ function printFinishedTasks(tasks) {
   const listOfFinishedTasks = document.createElement("h1");
 
   finishedTask.addEventListener("click", () => {
+    hideInbox();
     clearTasks();
     for (let i = 0; i < tasks.length; i++) {
       let task = tasks[i];
@@ -287,6 +289,7 @@ function printTodayTasks(tasks) {
   tasksForToday.addEventListener("click", () => {
     clearTasks();
     removeTask();
+    hideInbox();
     const tasksToday = tasks.filter((task) => task.date === todayCorrectFormat);
     if (tasksToday.length > 0) {
       printTask(tasksToday);
@@ -308,9 +311,12 @@ function printWeeklyTasks(tasks) {
     weeks: 1,
   });
 
+  console.log(result);
+
   weeklyTasks.addEventListener("click", () => {
     clearTasks();
     removeTask();
+    hideInbox();
 
     const tasksThisWeek = tasks.filter((task) => {
       const date = task.date;
@@ -342,6 +348,7 @@ function printInbox() {
 
   inbox.addEventListener("click", () => {
     clearTasks();
+    showInbox();
     printTask(allTasks);
   });
 }
@@ -432,6 +439,25 @@ function changeTask() {
   });
 }
 
+function hideInbox() {
+  const inboxTitle = document.querySelector(".inbox");
+  const addTaskButton = document.querySelector(".add-task");
+  const addTaskTitle = document.querySelector(".add-task-title");
+  inboxTitle.style.display = "none";
+  addTaskButton.style.display = "none";
+  addTaskTitle.style.display = "none";
+}
+
+function showInbox() {
+  const inboxTitle = document.querySelector(".inbox");
+  const addTaskButton = document.querySelector(".add-task");
+  const addTaskTitle = document.querySelector(".add-task-title");
+
+  inboxTitle.style.display = "";
+  addTaskButton.style.display = "";
+  addTaskTitle.style.display = "";
+}
+
 export {
   initializeForm,
   clearTasks,
@@ -443,4 +469,5 @@ export {
   closedTasks,
   printInbox,
   changeTask,
+  hideInbox
 };

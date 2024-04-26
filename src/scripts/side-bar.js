@@ -1,5 +1,7 @@
 import { format, compareAsc } from "date-fns";
-import { clearTasks } from "./app";
+import { clearTasks, hideInbox } from "./app";
+
+let projectIdCounter = 0;
 
 const allProjects = [];
 
@@ -67,13 +69,11 @@ function initializeProjectForm() {
 
   createButton.addEventListener("click", (e) => {
     e.preventDefault();
-    
+    addNewProject();
+    printProject();
     overlay.style.display = "none";
     modal.style.display = "none";
-
-    addNewProject();
   });
-
 }
 function addNewProject() {
   const projectNameInput = document.getElementById("project-name");
@@ -83,17 +83,62 @@ function addNewProject() {
 
   const projectName = projectNameInput.value;
   const projectDescription = projectDescriptionInput.value;
+  const projectId = ++projectIdCounter;
 
   allProjects.push({
-    project: projectName,
+    "project-name": projectName,
     "project-description": projectDescription,
+    "project-id": projectId,
   });
 
   const newProjectTab = document.querySelector(".projects-container ol");
-  console.log(newProjectTab);
   const projectTab = document.createElement("li");
+  projectTab.className = "target-project";
   projectTab.textContent = projectName;
-  newProjectTab.append(projectTab);
+  projectTab.dataset.id = projectId;
+  newProjectTab.appendChild(projectTab);
+}
+
+function printProject() {
+  const printProject = document.querySelectorAll(".target-project");
+  const content = document.querySelector(".content");
+  if (printProject.length > 0) {
+    printProject.forEach((element) => {
+      element.addEventListener("click", (event) => {
+        hideInbox();
+        clearProject();
+        const projectID = event.target.dataset.id;
+        for (let i = 0; i < allProjects.length; i++) {
+          const project = allProjects[i];
+          if (project["project-id"] == projectID) {
+            const projectBox = document.createElement("div");
+            projectBox.className = "project-box";
+
+            const printProjectTitle = document.createElement("div");
+            printProjectTitle.textContent = project["project-name"];
+            printProjectTitle.className = "project-print-title";
+
+            const printProjectDescription = document.createElement("div");
+            printProjectDescription.textContent =
+              project["project-description"];
+            printProjectDescription.className = "project-print-description";
+
+            projectBox.append(printProjectTitle, printProjectDescription);
+            content.appendChild(projectBox);
+          }
+        }
+      });
+    });
+  }
+}
+
+function clearProject() {
+  const projectBox = document.querySelectorAll(".project-box");
+  if (projectBox) {
+    projectBox.forEach((element) => {
+      element.remove();
+    });
+  }
 }
 
 export { toggleSideBar, initializeProjectForm };

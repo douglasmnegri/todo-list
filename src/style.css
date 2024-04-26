@@ -426,3 +426,12 @@ textarea {
   font-size: 1em;
   margin-bottom: 20px;
 }
+
+.project-print-title {
+  font-size: 24px; 
+  font-weight: bold;
+}
+
+.project-print-description {
+  margin-top: 10px; 
+}
