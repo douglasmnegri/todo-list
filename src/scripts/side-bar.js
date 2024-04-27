@@ -1,5 +1,5 @@
 import { format, compareAsc } from "date-fns";
-import { clearTasks, hideInbox } from "./app";
+import { clearTasks, hideInbox, printTask, allTasks } from "./app";
 
 let projectIdCounter = 0;
 
@@ -96,6 +96,7 @@ function addNewProject() {
   projectTab.className = "target-project";
   projectTab.textContent = projectName;
   projectTab.dataset.id = projectId;
+  projectTab.draggable = true;
   newProjectTab.appendChild(projectTab);
 }
 
@@ -107,7 +108,17 @@ function printProject() {
       element.addEventListener("click", (event) => {
         hideInbox();
         clearProject();
+        clearTasks();
+
+        //Need to fix the layout of how tasks are being add
         const projectID = event.target.dataset.id;
+        const matchingTasks = allTasks.filter(
+          (t) => t["project-id"] == projectID
+        );
+
+        if (matchingTasks.length > 0) {
+          printTask(matchingTasks);
+        }
         for (let i = 0; i < allProjects.length; i++) {
           const project = allProjects[i];
           if (project["project-id"] == projectID) {
@@ -134,11 +145,9 @@ function printProject() {
 
 function clearProject() {
   const projectBox = document.querySelectorAll(".project-box");
-  if (projectBox) {
-    projectBox.forEach((element) => {
-      element.remove();
-    });
-  }
+  projectBox.forEach((element) => {
+    element.remove();
+  });
 }
 
-export { toggleSideBar, initializeProjectForm };
+export { toggleSideBar, initializeProjectForm, clearProject };

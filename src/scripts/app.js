@@ -1,5 +1,7 @@
 import { create, remove } from "lodash";
 import { format, compareAsc, add, intervalToDuration } from "date-fns";
+import { clearProject } from "./side-bar";
+import dragTasks from "./drag-tasks.js";
 
 let taskIdCounter = 2;
 
@@ -129,6 +131,7 @@ function printTask(tasks) {
     const containerCurrentTasks = document.createElement("div");
     containerCurrentTasks.className = "container-current-tasks";
     containerCurrentTasks.id = task.id;
+    containerCurrentTasks.draggable = true;
 
     const tasksDiv = document.createElement("div");
     tasksDiv.className = "tasks-div";
@@ -175,6 +178,7 @@ function printTask(tasks) {
   removeForm();
   removeTask();
   changeTask();
+  dragTasks();
 }
 
 function removeForm() {
@@ -248,6 +252,7 @@ function printFinishedTasks(tasks) {
   const listOfFinishedTasks = document.createElement("h1");
 
   finishedTask.addEventListener("click", () => {
+    clearProject();
     hideInbox();
     clearTasks();
     for (let i = 0; i < tasks.length; i++) {
@@ -290,6 +295,7 @@ function printTodayTasks(tasks) {
     clearTasks();
     removeTask();
     hideInbox();
+    clearProject();
     const tasksToday = tasks.filter((task) => task.date === todayCorrectFormat);
     if (tasksToday.length > 0) {
       printTask(tasksToday);
@@ -311,12 +317,11 @@ function printWeeklyTasks(tasks) {
     weeks: 1,
   });
 
-  console.log(result);
-
   weeklyTasks.addEventListener("click", () => {
     clearTasks();
     removeTask();
     hideInbox();
+    clearProject();
 
     const tasksThisWeek = tasks.filter((task) => {
       const date = task.date;
@@ -349,6 +354,7 @@ function printInbox() {
   inbox.addEventListener("click", () => {
     clearTasks();
     showInbox();
+    clearProject();
     printTask(allTasks);
   });
 }
@@ -469,5 +475,6 @@ export {
   closedTasks,
   printInbox,
   changeTask,
-  hideInbox
+  hideInbox,
+  printTask
 };

@@ -435,3 +435,10 @@ textarea {
 .project-print-description {
   margin-top: 10px; 
 }
+
+.project-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
