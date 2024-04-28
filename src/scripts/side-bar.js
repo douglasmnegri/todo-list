@@ -103,6 +103,7 @@ function addNewProject() {
 function printProject() {
   const printProject = document.querySelectorAll(".target-project");
   const content = document.querySelector(".content");
+  const projectContent  = document.querySelector(".project-content");
   if (printProject.length > 0) {
     printProject.forEach((element) => {
       element.addEventListener("click", (event) => {
@@ -135,7 +136,7 @@ function printProject() {
             printProjectDescription.className = "project-print-description";
 
             projectBox.append(printProjectTitle, printProjectDescription);
-            content.appendChild(projectBox);
+            projectContent.appendChild(projectBox);
           }
         }
       });
