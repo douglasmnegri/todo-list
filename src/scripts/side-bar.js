@@ -1,9 +1,14 @@
 import { format, compareAsc } from "date-fns";
-import { clearTasks, hideInbox, printTask, allTasks } from "./app";
-
-let projectIdCounter = 0;
+import {
+  clearTasks,
+  hideInbox,
+  printTask,
+  allTasks,
+} from "./app";
 
 const allProjects = [];
+
+let projectIdCounter = 0;
 
 const sideTab = document.querySelector(".side-tab");
 const hamburgerIcon = document.querySelector(".hamburger");
@@ -75,6 +80,7 @@ function initializeProjectForm() {
     modal.style.display = "none";
   });
 }
+
 function addNewProject() {
   const projectNameInput = document.getElementById("project-name");
   const projectDescriptionInput = document.getElementById(
@@ -91,24 +97,30 @@ function addNewProject() {
     "project-id": projectId,
   });
 
-  const newProjectTab = document.querySelector(".projects-container ol");
+  printProjectList(projectName, projectId);
+}
+
+function printProjectList(projectName, projectId) {
+  const projectList = document.querySelector(".projects-container ol");
   const projectTab = document.createElement("li");
-  projectTab.className = "target-project";
   projectTab.textContent = projectName;
+  projectTab.className = "target-project";
+
   projectTab.dataset.id = projectId;
   projectTab.draggable = true;
-  newProjectTab.appendChild(projectTab);
+  projectList.appendChild(projectTab);
 }
 
 function printProject() {
-  const printProject = document.querySelectorAll(".target-project");
-  const projectContent  = document.querySelector(".project-content");
-  if (printProject.length > 0) {
-    printProject.forEach((element) => {
+  const projectTabs = document.querySelectorAll(".target-project");
+  const projectContent = document.querySelector(".project-content");
+  if (projectTabs.length > 0) {
+    projectTabs.forEach((element) => {
       element.addEventListener("click", (event) => {
         hideInbox();
         clearProject();
         clearTasks();
+
 
         //Need to fix the layout of how tasks are being add
         const projectID = event.target.dataset.id;
@@ -119,19 +131,20 @@ function printProject() {
         if (matchingTasks.length > 0) {
           printTask(matchingTasks);
         }
+
         for (let i = 0; i < allProjects.length; i++) {
-          const project = allProjects[i];
-          if (project["project-id"] == projectID) {
+          const projects = allProjects[i];
+          if (projects["project-id"] == projectID) {
             const projectBox = document.createElement("div");
             projectBox.className = "project-box";
 
             const printProjectTitle = document.createElement("div");
-            printProjectTitle.textContent = project["project-name"];
+            printProjectTitle.textContent = projects["project-name"];
             printProjectTitle.className = "project-print-title";
 
             const printProjectDescription = document.createElement("div");
             printProjectDescription.textContent =
-              project["project-description"];
+              projects["project-description"];
             printProjectDescription.className = "project-print-description";
 
             projectBox.append(printProjectTitle, printProjectDescription);
@@ -143,11 +156,17 @@ function printProject() {
   }
 }
 
+
 function clearProject() {
   const projectBox = document.querySelectorAll(".project-box");
   projectBox.forEach((element) => {
     element.remove();
   });
 }
-
-export { toggleSideBar, initializeProjectForm, clearProject };
+export {
+  toggleSideBar,
+  initializeProjectForm,
+  clearProject,
+  printProject,
+  allProjects,
+};

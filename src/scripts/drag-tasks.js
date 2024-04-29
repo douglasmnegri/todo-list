@@ -24,15 +24,17 @@ function dragTasks() {
       let taskCardID = event.dataTransfer.getData("text/plain");
       let dropZoneID = event.target.dataset.id;
 
+
       // Update the project-id for the dragged task card
       for (let i = 0; i < allTasks.length; i++) {
         let task = allTasks[i];
-        if (task.id === taskCardID) {
-          task["project-id"] = dropZoneID;
-          console.log(allTasks);
-          break; 
+        if (task.id === parseInt(taskCardID)) {
+          task["project-id"] = parseInt(dropZoneID);
+          break;
         }
       }
+
+      console.log(allTasks);
     });
   });
 }

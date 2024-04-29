@@ -16,14 +16,14 @@ import {
 import {
   toggleSideBar,
   initializeProjectForm,
-  allProjects,
+  printProject,
 } from "./scripts/side-bar.js";
-
 
 // Local storage
 const [loadedTasks, loadedClosedTasks] = loadTasksFromLocalStorage();
-allTasks.push(...loadedTasks.filter(task => task.name)); 
-closedTasks.push(...loadedClosedTasks.filter(task => task.name)); 
+allTasks.push(...loadedTasks.filter((task) => task.name));
+closedTasks.push(...loadedClosedTasks.filter((task) => task.name));
+console.log(allTasks)
 
 // Print loaded closed tasks to the UI
 printFinishedTasks(closedTasks);
@@ -39,3 +39,6 @@ changeTask();
 
 // Side-tab
 initializeProjectForm();
+printProject();
+
+

@@ -3,7 +3,11 @@ import { format, compareAsc, add, intervalToDuration } from "date-fns";
 import { clearProject } from "./side-bar";
 import dragTasks from "./drag-tasks.js";
 
-let taskIdCounter = 0;
+let taskIdCounter = parseInt(localStorage.getItem("taskIdCounter")) || 0;
+
+function updateTaskIdCounter() {
+  localStorage.setItem("taskIdCounter", taskIdCounter.toString());
+}
 
 const allTasks = [];
 
@@ -28,7 +32,6 @@ function loadTasksFromLocalStorage() {
   const closedTasks = JSON.parse(closedTasksJSON) || [];
   return [tasks, closedTasks];
 }
-
 
 function initializeForm() {
   addButton.addEventListener("click", () => {
@@ -218,7 +221,7 @@ function removeTask() {
 
         const taskBoxRemove = document.getElementById(taskID);
         taskBoxRemove.remove();
-        console.log(allTasks)
+        console.log(allTasks);
         saveTasksToLocalStorage(allTasks);
         saveClosedTasksToLocalStorage(closedTasks);
       });
@@ -247,6 +250,8 @@ function addNewTask() {
     id: taskId,
     tag: taskTag,
   });
+  taskIdCounter++;
+  updateTaskIdCounter(); 
   saveTasksToLocalStorage(allTasks);
 }
 
@@ -256,12 +261,12 @@ function clearTasks() {
   if (allCurrentTasks) {
     allCurrentTasks.forEach((element) => {
       element.remove();
+      console.log(element);
     });
   }
   if (tasksAvailable) {
     tasksAvailable.remove();
   }
-  saveTasksToLocalStorage(allTasks);
 }
 
 function printFinishedTasks(tasks) {
@@ -398,6 +403,7 @@ function changeTask() {
       allTasks.splice(taskIndex, 1);
       const taskBoxRemove = document.getElementById(taskID);
       taskBoxRemove.remove();
+      saveTasksToLocalStorage(allTasks);
     });
 
     editButton.addEventListener("click", (event) => {
