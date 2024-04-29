@@ -442,3 +442,9 @@ textarea {
   justify-content: center;
   align-items: center;
 }
+
+.task-tag-color {
+  display: flex;
+  width: fit-content;
+  padding: 0 5px;
+}

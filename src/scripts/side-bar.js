@@ -102,7 +102,6 @@ function addNewProject() {
 
 function printProject() {
   const printProject = document.querySelectorAll(".target-project");
-  const content = document.querySelector(".content");
   const projectContent  = document.querySelector(".project-content");
   if (printProject.length > 0) {
     printProject.forEach((element) => {

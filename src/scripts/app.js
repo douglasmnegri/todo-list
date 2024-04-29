@@ -3,28 +3,32 @@ import { format, compareAsc, add, intervalToDuration } from "date-fns";
 import { clearProject } from "./side-bar";
 import dragTasks from "./drag-tasks.js";
 
-let taskIdCounter = 2;
+let taskIdCounter = 0;
 
-const allTasks = [
-  {
-    name: "Super Market",
-    description: "Buy eggs, milk and bread.",
-    date: "24-04-2024",
-    id: "0",
-  },
-  {
-    name: "Read Book",
-    description: "Start to read the new novel from Stephen King",
-    date: "26-04-2024",
-    id: "1",
-  },
-];
+const allTasks = [];
 
 const closedTasks = [];
 
 const content = document.querySelector(".content");
 const addTaskBox = document.querySelector(".add-task-box");
 const addButton = document.querySelector(".add-task");
+
+function saveTasksToLocalStorage(tasks) {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function saveClosedTasksToLocalStorage(closedTasks) {
+  localStorage.setItem("closed-tasks", JSON.stringify(closedTasks));
+}
+
+function loadTasksFromLocalStorage() {
+  const tasksJSON = localStorage.getItem("tasks");
+  const closedTasksJSON = localStorage.getItem("closed-tasks");
+  const tasks = JSON.parse(tasksJSON) || [];
+  const closedTasks = JSON.parse(closedTasksJSON) || [];
+  return [tasks, closedTasks];
+}
+
 
 function initializeForm() {
   addButton.addEventListener("click", () => {
@@ -124,6 +128,7 @@ function printTask(tasks) {
     const taskName = task.name;
     const taskDescription = task.description;
     const taskDate = task.date;
+    const taskTag = task.tag;
 
     const taskBox = document.createElement("div");
     taskBox.className = "task-box";
@@ -150,6 +155,10 @@ function printTask(tasks) {
     const taskDatePrint = document.createElement("div");
     taskDatePrint.textContent = taskDate;
 
+    const taskTagPrint = document.createElement("div");
+    taskTagPrint.textContent = taskTag;
+    taskTagPrint.className = "task-tag-color";
+
     const iconDiv = document.createElement("div");
     iconDiv.className = "icon-div";
 
@@ -170,7 +179,12 @@ function printTask(tasks) {
 
     iconDiv.append(editButton, deleteButton);
     tasksDiv.append(taskProgress);
-    taskBox.append(taskNamePrint, taskDescriptionPrint, taskDatePrint);
+    taskBox.append(
+      taskNamePrint,
+      taskDescriptionPrint,
+      taskDatePrint,
+      taskTagPrint
+    );
     containerCurrentTasks.append(tasksDiv, taskBox, iconDiv);
     content.append(containerCurrentTasks);
   }
@@ -179,6 +193,7 @@ function printTask(tasks) {
   removeTask();
   changeTask();
   dragTasks();
+  paintTaskTag();
 }
 
 function removeForm() {
@@ -194,7 +209,6 @@ function removeTask() {
     taskProgress.forEach((element) => {
       element.addEventListener("click", (event) => {
         const taskID = event.target.dataset.id;
-        console.log(taskID);
         const taskIndex = allTasks.findIndex((t) => t.id == taskID);
         const removedTask = allTasks.splice(taskIndex, 1);
         let today = new Date();
@@ -204,6 +218,9 @@ function removeTask() {
 
         const taskBoxRemove = document.getElementById(taskID);
         taskBoxRemove.remove();
+        console.log(allTasks)
+        saveTasksToLocalStorage(allTasks);
+        saveClosedTasksToLocalStorage(closedTasks);
       });
     });
   }
@@ -230,6 +247,7 @@ function addNewTask() {
     id: taskId,
     tag: taskTag,
   });
+  saveTasksToLocalStorage(allTasks);
 }
 
 function clearTasks() {
@@ -237,13 +255,13 @@ function clearTasks() {
   const tasksAvailable = document.querySelector(".no-tasks");
   if (allCurrentTasks) {
     allCurrentTasks.forEach((element) => {
-      console.log(element);
       element.remove();
     });
   }
   if (tasksAvailable) {
     tasksAvailable.remove();
   }
+  saveTasksToLocalStorage(allTasks);
 }
 
 function printFinishedTasks(tasks) {
@@ -433,13 +451,15 @@ function changeTask() {
         taskDate.textContent = "";
         taskDate.textContent = formattedDate;
 
-       // Append the edit icon back to the button
-       const editIcon = document.createElement("i");
-       editIcon.className = "fa-regular fa-pen-to-square";
-       editButton.textContent = "";
-       editButton.appendChild(editIcon);
-       
-       editButton.classList.remove("editing");
+        // Append the edit icon back to the button
+        const editIcon = document.createElement("i");
+        editIcon.className = "fa-regular fa-pen-to-square";
+        editButton.textContent = "";
+        editButton.appendChild(editIcon);
+
+        editButton.classList.remove("editing");
+
+        saveTasksToLocalStorage(allTasks);
       }
     });
   });
@@ -464,6 +484,44 @@ function showInbox() {
   addTaskTitle.style.display = "";
 }
 
+function paintTaskTag() {
+  const tagColors = document.querySelectorAll(".task-tag-color");
+
+  tagColors.forEach((tagColor) => {
+    const tagText = tagColor.textContent.trim().toLowerCase(); // Convert to lowercase for consistency
+
+    let backgroundColor;
+    let textColor;
+    switch (tagText) {
+      case "personal":
+        backgroundColor = "#4caf50";
+        break;
+      case "work":
+        backgroundColor = "#ffc107";
+        break;
+      case "study":
+        backgroundColor = "#2196f3";
+        break;
+      case "health":
+        backgroundColor = "#f44336";
+        break;
+      case "home":
+        backgroundColor = "#03a9f4";
+        break;
+      case "urgent":
+        backgroundColor = "#9c27b0";
+        break;
+      default:
+        backgroundColor = "#9e9e9e"; // Default color if tag doesn't match any
+    }
+
+    textColor = "#ffffff"; // White text color
+
+    tagColor.style.backgroundColor = backgroundColor;
+    tagColor.style.color = textColor;
+  });
+}
+
 export {
   initializeForm,
   clearTasks,
@@ -476,5 +534,6 @@ export {
   printInbox,
   changeTask,
   hideInbox,
-  printTask
+  printTask,
+  loadTasksFromLocalStorage,
 };
